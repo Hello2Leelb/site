@@ -20,32 +20,6 @@ class UserManager(BaseUserManager):
         return user
 
 
-# class User(models.Model):
-#     """
-#     username password is_active last_login date_join
-#     """
-#     username_validator = UnicodeUsernameValidator()
-#
-#     username = models.CharField(
-#         _('username'),
-#         max_length=20,
-#         primary_key=True,
-#         help_text=_('Required. 20 characters or fewer. Letters, digits and @/./+/-/_ only.'),
-#         validators=[username_validator],
-#         error_messages={
-#               'unique': _("A user with that username already exists."),
-#         }
-#     )
-#     password = models.CharField(_('password'), max_length=32)
-#     date_join = models.DateTimeField(_('date joined'), auto_created=True)
-#     last_login = models.DateTimeField()
-#
-#     objects = UserManager()
-#
-#     def __str__(self):
-#         return self.username
-
-
 class User(AbstractBaseUser):
     username_validator = UnicodeUsernameValidator()
 
@@ -78,7 +52,7 @@ class UserAuthBackend:
         except User.DoesNotExist:
             return None
 
-    def authenticate(self, request, username=None, password=None):
+    def authenticate(self, request, username=None, password=None, **kwargs):
         """
         :param request: HttpRequest and may be None
         :param username:
@@ -86,6 +60,23 @@ class UserAuthBackend:
         :return: a user object that matches those credentials if the credentials are valid.
                     If they’re not valid, it should return None.
         """
-        pass
-        # todo
+        if username is None:
+            username = kwargs.get(User.USERNAME_FIELD)
+        try:
+            # user = User._default_manager.get_by_natural_key(username)
+            user = User.objects.get(username)
+        except User.DoesNotExist:
+            # Run the default password hasher once to reduce the timing
+            # difference between an existing and a nonexistent user (#20760).
+            User().set_password(password)
+        else:
+            if user.check_password(password) and self.user_can_authenticate(user):
+                return user
 
+    def user_can_authenticate(self, user):
+        """
+        Reject users with is_active=False. Custom user models that don't have
+        that attribute are allowed.
+        """
+        is_active = getattr(user, 'is_active', None)
+        return is_active or is_active is None
