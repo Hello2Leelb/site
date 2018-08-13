@@ -80,3 +80,23 @@ class UserAuthBackend:
         """
         is_active = getattr(user, 'is_active', None)
         return is_active or is_active is None
+
+
+class PictureEntry(models.Model):
+    uploader = models.ForeignKey(User, on_delete=models.CASCADE)
+    img_file = models.ImageField(upload_to='')
+    description = models.CharField(max_length=500)
+    upload_time = models.DateTimeField(auto_now_add=True)
+    approval = models.IntegerField()
+    negative = models.IntegerField()
+
+    def __str__(self):
+        pass
+
+    def totaly_bad(self):
+        if self.negative > 3 * self.approval:
+            return True
+
+
+class Comment:
+    pass
