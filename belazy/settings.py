@@ -92,7 +92,7 @@ DATABASES = {
 }
 
 AUTHENTICATION_BACKENDS = [
-    '',
+    'mainsite.backends.UserAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
