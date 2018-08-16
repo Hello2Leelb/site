@@ -1,14 +1,23 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
+from django.utils import timezone
 from .forms import *
 
 # Create your views here.
 
 
 def register_view(request):
-    pass
+    new_user_form = SiteUserCreationForm(request.POST)
+    if new_user_form.is_valid():
+        new_user_form.save()
+        reging_user = authenticate(
+            username=new_user_form.cleaned_data['username'],
+            password=new_user_form.cleaned_data['password1'],
+        )
+        login(request, reging_user)
+        return redirect(reverse('mainsite:index'))
 
 
 def login_view(request):

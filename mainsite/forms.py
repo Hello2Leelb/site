@@ -16,7 +16,7 @@ class SiteUserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm):
         model = User
-        fields = ['username', 'password']
+        # fields = ['username', 'password']
 
 
 class PublishImgForm(ModelForm):
