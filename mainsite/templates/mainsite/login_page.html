@@ -5,10 +5,11 @@
     <title>用户登录</title>
 </head>
 <body>
-    <form action="{{ login_url }}" method="post">
+    <form action="{% url 'mainsite:login' %}" method="post">
+        {% csrf_token %}
         {{ form.as_table }}
         <input type="submit" value="登录"/>
-        <a href="{{ register_url }}"><label>新用户注册</label></a>
+        <a href="{% url 'mainsite:register' %}"><label>新用户注册</label></a>
     </form>
 </body>
 </html>

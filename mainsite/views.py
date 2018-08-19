@@ -45,3 +45,11 @@ def get_publication_img(request):
             img_url=new_pub_form.cleaned_data['img_url'],
             description=new_pub_form['description'],
         )
+
+
+def index_view(request):
+    imgs_list(request)
+
+
+def imgs_list(request):
+    return render(request, 'mainste/img_publish_part.html', content_type='text/html')
