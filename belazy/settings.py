@@ -91,8 +91,11 @@ DATABASES = {
     },
 }
 
+
+AUTH_USER_MODEL = ''
+
 AUTHENTICATION_BACKENDS = [
-    'siteuser.backends.UserAuthBackend',
+    # 'siteuser.backends.UserAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 

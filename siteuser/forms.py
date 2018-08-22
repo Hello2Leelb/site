@@ -13,9 +13,8 @@ class SiteUser(AuthenticationForm):
 
 class SiteUserCreationForm(UserCreationForm):
 
-    class Meta(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
         model = User
-        # fields = ['username', 'password']
 
 
 
