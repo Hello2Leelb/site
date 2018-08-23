@@ -8,7 +8,7 @@ from siteuser.forms import AuthSiteUserForm, SiteUserCreationForm
 
 
 class UserAdmin(BaseUserAdmin):
-    # The forms to add and change user instances
+    # 自带的这两个表单与自带User模型绑定，使用自定模型对应的form
     form = AuthSiteUserForm
     add_form = SiteUserCreationForm
 
