@@ -54,8 +54,8 @@ class User(AbstractUser):
 
     is_active = True
 
-    # 账号信息去除部分，email有需求可以加上
-    email = None
+    # 账号信息去除部分，email不用于注册登陆
+    # email = None
     first_name = None
     last_name = None
     # 权限部分信息

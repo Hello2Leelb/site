@@ -28,7 +28,7 @@ def login_user(request):
             return redirect(reverse('siteuser:index'))
     elif request.method == 'GET':
         return render(request, 'siteuser/login_page.html', {
-             'form': SiteUser,
+             'form': AuthSiteUserForm,
         },)
 
 
