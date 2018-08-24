@@ -13,19 +13,28 @@ def register(request):
     new_user_form = SiteUserCreationForm(request.POST)
     if new_user_form.is_valid():
         new_user_form.save()
-        reging_user = authenticate(
+
+        reged_user = authenticate(
             username=new_user_form.cleaned_data['username'],
             password=new_user_form.cleaned_data['password1'],
         )
-        login(request, reging_user)
+        login(request, reged_user)
         return redirect(reverse('siteuser:index'))
 
 
 def login_user(request):
     if request.method == 'POST':
-        if request.user.is_authenticated:
-            login(request, request.user)
-            return redirect(reverse('siteuser:index'))
+        # username = request.POST['username']
+        # password = request.POST['password']
+        # logining_user = authenticate(request, username=username, password=password)
+        # 自带表单验证数据合法时(username,password)，也authenticate验证用户模型实例
+        auth_form = AuthSiteUserForm(request)
+        if auth_form.is_valid():
+            logining_user = auth_form.get_user()
+            if logining_user.is_authenticated:
+                login(request, request.user)
+                return redirect(reverse('siteuser:index'))
+
     elif request.method == 'GET':
         return render(request, 'siteuser/login_page.html', {
              'form': AuthSiteUserForm,

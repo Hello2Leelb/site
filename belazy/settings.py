@@ -81,7 +81,7 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django',
+        'NAME': 'myrelaxsite',
         'USER': 'root',
         'PASSWORD': '@123456',
         'OPTIONS': {
@@ -92,7 +92,7 @@ DATABASES = {
 }
 
 
-AUTH_USER_MODEL = ''
+AUTH_USER_MODEL = 'siteuser.User'
 
 AUTHENTICATION_BACKENDS = [
     'siteuser.backends.SiteBackend'

@@ -40,6 +40,9 @@ class SiteUserManager(BaseUserManager):
 
 
 class User(AbstractUser):
+    """
+    password last_login username email date_joined is_staff is_superuser user_permissions(MTM)
+    """
 
     username = models.CharField(
         _('username'),
