@@ -27,18 +27,21 @@ def login_user(request):
         # username = request.POST['username']
         # password = request.POST['password']
         # logining_user = authenticate(request, username=username, password=password)
-        # 自带表单验证数据合法时(username,password)，也authenticate验证用户模型实例
+
         auth_form = AuthSiteUserForm(request)
         if auth_form.is_valid():
+            # 验证数据合法时，同时authenticate()验证返回对象实例
             logining_user = auth_form.get_user()
             if logining_user.is_authenticated:
-                login(request, request.user)
+                login(request, logining_user)
                 return redirect(reverse('siteuser:index'))
 
     elif request.method == 'GET':
         return render(request, 'siteuser/login_page.html', {
              'form': AuthSiteUserForm,
         },)
+
+# 第一次登录，cookie中只有csrf_token，验证系统中间件返回AnonymousUser。后台的login_view中，验证表单通过账号密码获取用户对象。
 
 
 def logout_user(request):

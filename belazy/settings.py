@@ -92,11 +92,9 @@ DATABASES = {
 }
 
 
-AUTH_USER_MODEL = 'siteuser.User'
-
 AUTHENTICATION_BACKENDS = [
     'siteuser.backends.SiteBackend'
-    # 'django.contrib.auth.backends.ModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 
@@ -124,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
