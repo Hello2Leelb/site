@@ -10,16 +10,22 @@ from picture.views import imgs_list
 
 
 def register(request):
-    new_user_form = SiteUserCreationForm(request.POST)
-    if new_user_form.is_valid():
-        new_user_form.save()
+    if request.method == 'POST':
+        new_user_form = SiteUserCreationForm(request.POST)
+        if new_user_form.is_valid():
+            new_user_form.save()
 
-        reged_user = authenticate(
-            username=new_user_form.cleaned_data['username'],
-            password=new_user_form.cleaned_data['password1'],
-        )
-        login(request, reged_user)
-        return redirect(reverse('siteuser:index'))
+            reged_user = authenticate(
+                username=new_user_form.cleaned_data['username'],
+                password=new_user_form.cleaned_data['password1'],
+            )
+            login(request, reged_user)
+            return redirect(reverse('siteuser:index'))
+
+    elif request.method == 'GET':
+        return render(request, template_name='siteuser/register.html', context={
+            'form': SiteUserCreationForm
+        })
 
 
 def login_user(request):
@@ -37,7 +43,7 @@ def login_user(request):
                 return redirect(reverse('siteuser:index'))
 
     elif request.method == 'GET':
-        return render(request, 'siteuser/login_page.html', {
+        return render(request, 'siteuser/login_page.html', context={
              'form': AuthSiteUserForm,
         },)
 
@@ -47,6 +53,20 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return redirect(reverse('siteuser:index'))
+
+
+@login_required(login_url=reverse('siteuser:login'))
+def change_password(request):
+    if request.method == 'POST':
+        change_form = UserPasswdChangeForm(request.user)
+        if change_form.is_valid():
+            change_form.save()
+        return request(reverse('siteuser:login'))
+
+    elif request.method == 'GET':
+        return render(request, template_name='siteuser/change_pwd.html', context={
+            'form': UserPasswdChangeForm
+        })
 
 
 def index(request):

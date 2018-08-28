@@ -10,7 +10,7 @@
     to be continued
 </p>
 
-<form id="publishform" action="{% url 'mainsite:publish' %}">
+<form id="publishform" action="{% url '' %}">
     {% csrf_token %}
     <p>
         <label for="{{ form.img_url.id_for_label }}">粘贴图片链接</label>

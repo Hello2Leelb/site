@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
 from siteuser.models import User as SiteUser
 
 
@@ -24,4 +24,5 @@ class SiteUserCreationForm(UserCreationForm):
         fields = ['username', 'email']
 
 
-# todo
+class UserPasswdChangeForm(PasswordChangeForm):
+    pass
