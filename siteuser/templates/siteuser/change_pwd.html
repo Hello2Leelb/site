@@ -5,10 +5,21 @@
     <title>修改密码</title>
 </head>
 <body>
-    <form action="{% url 'siteuser:changepwd' %}" method="post">
-        {% csrf_token %}
-        {{ form.as_table }}
-        <input type="submit" value="提交修改"/>
-    </form>
+    <div>
+        <form action="{% url 'siteuser:changepwd' %}" method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {% for field in form %}
+                <div class="fieldWrapper">
+                    {{ field.label_tag }} {{ field }}
+                    {{ field.errors }}
+                    {% if field.help_text %}
+                    <p class="help">{{ field.help_text|safe }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <input type="submit" value="提交修改"/>
+        </form>
+    </div>
 </body>
 </html>

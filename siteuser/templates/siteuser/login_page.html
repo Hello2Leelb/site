@@ -5,11 +5,23 @@
     <title>用户登录</title>
 </head>
 <body>
-    <form action="{% url 'siteuser:login' %}" method="post">
-        {% csrf_token %}
-        {{ form.as_table }}
-        <input type="submit" value="登录"/>
-        <a href="{% url 'siteuser:register' %}"><label>新用户注册</label></a>
-    </form>
+    <div>
+        <form action="{% url 'siteuser:login' %}" method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {% for field in form %}
+                <div class="fieldWrapper">
+                    {{ field.label_tag }} {{ field }}
+                    {{ field.errors }}
+                    {% if field.help_text %}
+                    <p class="help">{{ field.help_text|safe }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <input type="submit" value="登录"/>
+            <a href="{% url 'siteuser:register' %}"><label>新用户注册</label></a>
+        </form>
+    </div>
+
 </body>
 </html>

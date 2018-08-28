@@ -98,6 +98,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
+SESSION_COOKIE_AGE = 604800
+
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 

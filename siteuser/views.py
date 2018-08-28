@@ -1,3 +1,6 @@
+from urllib.parse import urlparse
+
+from django.http import QueryDict
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth import login, logout, authenticate
@@ -20,12 +23,15 @@ def register(request):
                 password=new_user_form.cleaned_data['password1'],
             )
             login(request, reged_user)
+            # 携带request?
             return redirect(reverse('siteuser:index'))
 
-    elif request.method == 'GET':
-        return render(request, template_name='siteuser/register.html', context={
-            'form': SiteUserCreationForm
-        })
+    else:
+        new_user_form = SiteUserCreationForm()
+
+    return render(request, template_name='siteuser/register.html', context={
+        'form': new_user_form
+    })
 
 
 def login_user(request):
@@ -40,12 +46,20 @@ def login_user(request):
             logining_user = auth_form.get_user()
             if logining_user.is_authenticated:
                 login(request, logining_user)
-                return redirect(reverse('siteuser:index'))
 
-    elif request.method == 'GET':
-        return render(request, 'siteuser/login_page.html', context={
-             'form': AuthSiteUserForm,
-        },)
+                qs = QueryDict(urlparse(request.url).query, mutable=True)
+                login_from = qs.get('next')
+                if login_from:
+                    return redirect(login_from)
+                else:
+                    return redirect(reverse('siteuser:index'))
+
+    else:
+        auth_form = AuthSiteUserForm()
+
+    return render(request, 'siteuser/login_page.html', context={
+         'form': auth_form,
+    },)
 
 # 第一次登录，cookie中只有csrf_token，验证系统中间件返回AnonymousUser。后台的login_view中，验证表单通过账号密码获取用户对象。
 
@@ -63,10 +77,12 @@ def change_password(request):
             change_form.save()
         return request(reverse('siteuser:login'))
 
-    elif request.method == 'GET':
-        return render(request, template_name='siteuser/change_pwd.html', context={
-            'form': UserPasswdChangeForm
-        })
+    else:
+        change_form = UserPasswdChangeForm(None)
+
+    return render(request, template_name='siteuser/change_pwd.html', context={
+        'form': change_form
+    })
 
 
 def index(request):
