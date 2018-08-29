@@ -7,7 +7,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from siteuser.forms import *
-from picture.views import imgs_list
+from picture.views import ImgsList
 
 # Create your views here.
 
@@ -23,7 +23,7 @@ def register(request):
                 password=new_user_form.cleaned_data['password1'],
             )
             login(request, reged_user)
-            # 携带request?
+
             return redirect(reverse('siteuser:index'))
 
     else:
@@ -78,7 +78,7 @@ def change_password(request):
         return request(reverse('siteuser:login'))
 
     else:
-        change_form = UserPasswdChangeForm(None)
+        change_form = UserPasswdChangeForm(request.user)
 
     return render(request, template_name='siteuser/change_pwd.html', context={
         'form': change_form
@@ -86,4 +86,5 @@ def change_password(request):
 
 
 def index(request):
-    imgs_list(request)
+    handle_index = ImgsList.as_view()
+    return handle_index(request)

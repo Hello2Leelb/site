@@ -11,6 +11,7 @@ class PictureEntry(models.Model):
     upload_time = models.DateTimeField(auto_now_add=True)
     approval = models.IntegerField(default=0)
     negative = models.IntegerField(default=0)
+    checked = models.BooleanField(default=False)
 
     def __str__(self):
         pass

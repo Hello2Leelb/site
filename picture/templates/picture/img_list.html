@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+
+<div>
+    {% if entry_list%}
+        {% for entry in entry_list %}
+        <div>
+            <span>{{ entry.uploader.username }}</span>
+            <span>{{ entry.id }}</span>
+            <div>
+                <img src="{{ entry.img_url}}">
+            </div>
+            <p>
+                {{ entry.description }}
+            </p>
+            <a id="vote_g" onclick=""></a> <span> entry.approval </span>
+            <a id="vote_b" onclick=""></a> <span> entry.negative </span>
+        </div>
+        {% endfor %}
+    {% else %}
+        <span> no content </span>
+    {% endif %}
+</div>
+
+<div>
+
+</div>
+
+<div>
+    <form id="publishform" action="{% url '' %}">
+        {% csrf_token %}
+        <p>
+            <label for="{{ form.img_url.id_for_label }}">粘贴图片链接</label>
+            {{ form.img_url }}
+        </p>
+        <p>
+            <label for="{{ form.description.id_for_label }}">添加备注</label>
+            {{ form.description }}
+        </p>
+        <input type="submit" onclick="submitForm();" value="点击发布">
+    </form>
+</div>
+
+<script>
+    function submitForm(){
+        <!--var token = $.cookie('csrftoken');-->
+        var token = $(" input[name=csrfmiddlewaretoken] ").val();
+        var to_url = $(" #publishform ")
+        var vurl = $(" #id_img_url ").attr("action")
+        var vdes = $(" #id_description").val()
+
+        $.ajax({
+            url: to_url,
+            type: 'POST',
+            headers:{'X-CSRFToken': token},
+            data: {
+                "img_url": vurl,
+                "description": vdes,
+            },
+        })
+    }
+</script>
+</body>
+</html>
