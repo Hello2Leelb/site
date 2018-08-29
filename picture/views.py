@@ -28,7 +28,25 @@ class ImgsList(ListView):
 
         paginator = content['paginator']
         cur_page = content['page_obj']
-        # todo
+        cur_num = cur_page.number
+        if paginator.num_pages <= 13:
+            front_pages = list(range(1, cur_num))
+            back_pages = list(range(cur_num+1, paginator.num_pages+1))
+        else:
+            if cur_num-1 <= 6:
+                front_pages = list(range(1, cur_num))
+            else:
+                front_pages = [1, '...', cur_num-4, cur_num-3, cur_num-2, cur_num-1]
+
+            if paginator.num_pages-cur_num > 13:
+                back_pages = [cur_num+1, cur_num+2, cur_num+3, cur_num+4, '...', paginator.num_pages]
+            else:
+                back_pages = list(range(cur_num+1, paginator.num_pages+1))
+
+        content['front'] = front_pages
+        content['back'] = back_pages
+
+        return content
 
 
 @login_required(login_url=reverse('siteuser:login'))

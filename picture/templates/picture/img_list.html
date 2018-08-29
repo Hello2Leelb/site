@@ -8,30 +8,32 @@
 <body>
 
 <div>
-    {% if entry_list%}
-        {% for entry in entry_list %}
+    {% for entry in entry_list %}
+    <div>
+        <span>{{ entry.uploader.username }}</span>
+        <span>{{ entry.id }}</span>
         <div>
-            <span>{{ entry.uploader.username }}</span>
-            <span>{{ entry.id }}</span>
-            <div>
-                <img src="{{ entry.img_url}}">
-            </div>
-            <p>
-                {{ entry.description }}
-            </p>
-            <a id="vote_g" onclick=""></a> <span> entry.approval </span>
-            <a id="vote_b" onclick=""></a> <span> entry.negative </span>
+            <img src="{{ entry.img_url}}">
         </div>
-        {% endfor %}
-    {% else %}
+        <p>
+            {{ entry.description }}
+        </p>
+        <a id="vote_g" onclick=""></a> <span> entry.approval </span>
+        <a id="vote_b" onclick=""></a> <span> entry.negative </span>
+    </div>
+    {% empty %}
         <span> no content </span>
-    {% endif %}
+    {% endfor %}
 </div>
 
 <div>
 
 </div>
-
+    {% if is_paginatedc%}
+        <ul style="list-style-type:none">
+            <li><div><span> n </span></div></li>
+        </ul>
+    {% endif %}
 <div>
     <form id="publishform" action="{% url '' %}">
         {% csrf_token %}
