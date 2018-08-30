@@ -1,7 +1,9 @@
+from datetime import timedelta
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.list import ListView
+from django.utils import timezone
 from picture.forms import PublishImgForm
 from picture.models import PictureEntry
 
@@ -9,12 +11,16 @@ from picture.models import PictureEntry
 # Create your views here.
 
 
-# def imgs_list(request):
-#     return render(request, 'picture/img_list.html', content_type='text/html')
+def list_limit_time():
+    return timezone.localdate() - timedelta(days=30)
+
 
 class ImgsList(ListView):
     template_name = 'picture/img_list.html'
-    queryset = PictureEntry.objects.select_related('uploader').filter(checked=True).order_by('-upload_time')
+    queryset = PictureEntry.objects.select_related('uploader').filter(
+        checked=True, pub_time__date__gt=list_limit_time()
+    ).order_by('-pub_time')
+
     paginate_by = 10
     context_object_name = 'entry_list'
     extra_context = {'form': PublishImgForm()}
@@ -38,7 +44,7 @@ class ImgsList(ListView):
             else:
                 front_pages = [1, '...', cur_num-4, cur_num-3, cur_num-2, cur_num-1]
 
-            if paginator.num_pages-cur_num > 13:
+            if paginator.num_pages-cur_num > 11:
                 back_pages = [cur_num+1, cur_num+2, cur_num+3, cur_num+4, '...', paginator.num_pages]
             else:
                 back_pages = list(range(cur_num+1, paginator.num_pages+1))

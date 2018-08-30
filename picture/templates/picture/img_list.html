@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>骚图</title>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
 <body>
@@ -27,13 +27,27 @@
 </div>
 
 <div>
-
-</div>
     {% if is_paginatedc%}
         <ul style="list-style-type:none">
-            <li><div><span> n </span></div></li>
+            <li><div><a href="?page={{ front.-1 }}"> 上一页 </a></div></li>
+            {% for p in front %}
+                {% if p == '...' %}
+                    <li><div><span> {{ p }} </span></div></li>
+                {% else %}
+                    <li><div><a href="?page={{ p }}"> {{ p }} </a></div></li>
+            {% endfor %}
+            <li><div><a class="active" href="?page={{ page_obj.number }}"> {{ page_obj.number }} </a></div></li>
+            {% for p in back %}
+                {% if p == '...' %}
+                    <li><div><span> {{ p }} </span></div></li>
+                {% else %}
+                    <li><div><a href="?page={{ p }}"> {{ p }} </a></div></li>
+            {% endfor %}
+            <li><div><a href="?page={{ back.0 }}"> 下一页 </a></div></li>
         </ul>
     {% endif %}
+</div>
+
 <div>
     <form id="publishform" action="{% url '' %}">
         {% csrf_token %}
