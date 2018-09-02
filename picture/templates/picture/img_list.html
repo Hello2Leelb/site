@@ -33,12 +33,13 @@
 <div>
     {% if is_paginatedc%}
         <ul style="list-style-type:none">
-            <li><div><a href="?page={{ front.-1 }}"> 上一页 </a></div></li>
+            <li><div><a href="?page={{ front|last }}"> 上一页 </a></div></li>
             {% for p in front %}
                 {% if p == '...' %}
                     <li><div><span> {{ p }} </span></div></li>
                 {% else %}
                     <li><div><a href="?page={{ p }}"> {{ p }} </a></div></li>
+                {% endif %}
             {% endfor %}
             <li><div><a class="active" href="?page={{ page_obj.number }}"> {{ page_obj.number }} </a></div></li>
             {% for p in back %}
@@ -46,14 +47,15 @@
                     <li><div><span> {{ p }} </span></div></li>
                 {% else %}
                     <li><div><a href="?page={{ p }}"> {{ p }} </a></div></li>
+                {% endif %}
             {% endfor %}
-            <li><div><a href="?page={{ back.0 }}"> 下一页 </a></div></li>
+            <li><div><a href="?page={{ back|first }}"> 下一页 </a></div></li>
         </ul>
     {% endif %}
 </div>
 
 <div>
-    <form id="publishform" action="{% url '' %}">
+    <form id="publishform" action="{% url 'picture:publish' %}">
         {% csrf_token %}
         <p>
             <label for="{{ form.img_url.id_for_label }}">粘贴图片链接</label>

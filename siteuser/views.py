@@ -6,6 +6,7 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from siteuser.forms import *
+from picture.views import ImgList
 
 # Create your views here.
 
@@ -83,6 +84,6 @@ def change_password(request):
     })
 
 
-# def index(request):
-#     handle_index = ImgsList.as_view()
-#     return handle_index(request)
+def index(request):
+    handle_index = ImgList.as_view()
+    return handle_index(request)
