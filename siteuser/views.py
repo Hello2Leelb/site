@@ -85,6 +85,6 @@ def change_password(request):
     })
 
 
-def index(request):
-    handle_index = ImgsList.as_view()
-    return handle_index(request)
+# def index(request):
+#     handle_index = ImgsList.as_view()
+#     return handle_index(request)
