@@ -2,12 +2,10 @@ from urllib.parse import urlparse
 
 from django.http import QueryDict
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-from django.utils import timezone
 from siteuser.forms import *
-from picture.views import ImgsList
 
 # Create your views here.
 
@@ -69,7 +67,7 @@ def logout_user(request):
     return redirect(reverse('siteuser:index'))
 
 
-@login_required(login_url=reverse('siteuser:login'))
+@login_required(login_url=reverse_lazy('siteuser:login'))
 def change_password(request):
     if request.method == 'POST':
         change_form = UserPasswdChangeForm(request.user)

@@ -1,7 +1,7 @@
 from datetime import timedelta
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from django.urls import reverse
+from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.views.generic.list import ListView
 from django.views.decorators.http import require_POST
@@ -17,7 +17,7 @@ def list_limit_time():
     return timezone.localdate() - timedelta(days=30)
 
 
-class ImgsList(ListView):
+class ImgList(ListView):
     template_name = 'picture/img_list.html'
     queryset = PictureEntry.objects.select_related('uploader').filter(
         checked=True, pub_time__date__gt=list_limit_time()
@@ -58,7 +58,7 @@ class ImgsList(ListView):
 
 
 @require_POST
-@login_required(login_url=reverse('siteuser:login'))
+@login_required(login_url=reverse_lazy('siteuser:login'))
 def get_publication_img(request):
     new_pub_form = PublishImgForm(request.POST)
     if new_pub_form.is_valid():
