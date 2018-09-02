@@ -10,6 +10,8 @@ from picture.views import ImgList
 
 # Create your views here.
 
+_index = 'picture:images'
+
 
 def register(request):
     if request.method == 'POST':
@@ -23,7 +25,7 @@ def register(request):
             )
             login(request, reged_user)
 
-            return redirect(reverse('siteuser:index'))
+            return redirect(reverse(_index))
 
     else:
         new_user_form = SiteUserCreationForm()
@@ -51,7 +53,7 @@ def login_user(request):
                 if login_from:
                     return redirect(login_from)
                 else:
-                    return redirect(reverse('siteuser:index'))
+                    return redirect(reverse(_index))
 
     else:
         auth_form = AuthSiteUserForm()
@@ -65,7 +67,7 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    return redirect(reverse('siteuser:index'))
+    return redirect(reverse(_index))
 
 
 @login_required(login_url=reverse_lazy('siteuser:login'))
@@ -84,6 +86,6 @@ def change_password(request):
     })
 
 
-def index(request):
-    handle_index = ImgList.as_view()
-    return handle_index(request)
+# def index(request):
+#     handle_index = ImgList.as_view()
+#     return handle_index(request)
