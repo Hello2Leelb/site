@@ -22,7 +22,7 @@ class SiteUserManager(BaseUserManager):
 
 class User(AbstractBaseUser):
     """
-    password last_login username email date_joined
+    password username email date_joined
     不做激活处理，email不做强制。
     """
     username_validator = UnicodeUsernameValidator()
@@ -39,6 +39,8 @@ class User(AbstractBaseUser):
     )
     email = models.EmailField(_('email address'), blank=True, null=True)
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+
+    last_login = None
 
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'email'

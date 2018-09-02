@@ -8,4 +8,5 @@ app_name = 'picture'
 urlpatterns = [
     path('pic/', views.ImgsList.as_view()),
     path('publish/', views.get_publication_img, name='publish'),
+    path('vote/', views.pic_vote),
 ]

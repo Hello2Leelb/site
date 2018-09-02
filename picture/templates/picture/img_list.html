@@ -18,8 +18,12 @@
         <p>
             {{ entry.description }}
         </p>
-        <a id="vote_g" onclick=""></a> <span> entry.approval </span>
-        <a id="vote_b" onclick=""></a> <span> entry.negative </span>
+        <div>
+            <a class="vote" href="javascript:;" data-id="{{ entry.id }}" data-type="pos">↑</a>
+            <span> {{ entry.positive }} </span>
+            <a class="vote" href="javascript:;" data-id="{{ entry.id }}" data-type="neg">↓</a>
+            <span> {{ entry.negative }} </span>
+        </div>
     </div>
     {% empty %}
         <span> no content </span>
@@ -63,13 +67,16 @@
     </form>
 </div>
 
+<div id="message" style="margin-left: -56px; margin-top: -10.5px; display: none;"></div>
+
 <script>
+    var token = $(" input[name='csrfmiddlewaretoken'] ").val();
+
     function submitForm(){
         <!--var token = $.cookie('csrftoken');-->
-        var token = $(" input[name=csrfmiddlewaretoken] ").val();
-        var to_url = $(" #publishform ")
-        var vurl = $(" #id_img_url ").attr("action")
-        var vdes = $(" #id_description").val()
+        var to_url = $(" #publishform ");
+        var vurl = $(" #id_img_url ").attr("action");
+        var vdes = $(" #id_description").val();
 
         $.ajax({
             url: to_url,
@@ -79,8 +86,34 @@
                 "img_url": vurl,
                 "description": vdes,
             },
-        })
+        });
     }
+
+    $(".vote").click(function (e) {
+        var v_id = $(e.target).attr('data-id');
+        var type = $(e.target).attr('data-type');
+        $.ajax({
+            url: '/pic/vote',
+            type: 'POST'
+            data: {
+                'pic': v_id,
+                'type': type,
+            },
+            headers:{'X-CSRFToken': token},
+            success: function(res){
+                var data = eval('('+res+')');
+                msg = data['result'];
+                if(msg=='ok'){
+                    t = parseInt($(e.target).text());
+                    $(e.target).text(t+1);
+                }
+                else{
+                    $(" #message ").text(msg);
+                    $(" #message ").show()show().delay(1000).hide(200);
+                }
+            }
+        });
+    });
 </script>
 </body>
 </html>

@@ -6,7 +6,7 @@ from siteuser.models import User
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'last_login')
+    list_display = ('username', 'email',)
     list_per_page = 50
 
 

@@ -9,13 +9,27 @@ class PictureEntry(models.Model):
     img_url = models.URLField(max_length=300)
     description = models.CharField(max_length=500, null=True, blank=True)
     pub_time = models.DateTimeField(auto_now_add=True)
-    approval = models.IntegerField(default=0)
-    negative = models.IntegerField(default=0)
+    # positive = models.IntegerField(default=0)
+    # negative = models.IntegerField(default=0)
     checked = models.BooleanField(default=False)
 
     def __str__(self):
-        pass
+        return self.pk
+
+    @property
+    def positive(self):
+        return PicVoteLog.objects.filter(pic=self.pk, type=1).count()
+
+    @property
+    def negative(self):
+        return PicVoteLog.objects.filter(pic=self.pk, type=0).count()
 
     def totaly_bad(self):
-        if self.negative > 3 * self.approval:
+        if self.negative > 3 * self.positive:
             return True
+
+
+class PicVoteLog(models.Model):
+    pic = models.ForeignKey(PictureEntry, on_delete=models.CASCADE)
+    remote_ip = models.GenericIPAddressField()
+    type = models.IntegerField()
