@@ -66,6 +66,7 @@ def get_publication_img(request):
             img_url=new_pub_form.cleaned_data['img_url'],
             description=new_pub_form['description'],
         )
+    return JsonResponse({'status': 'ok'})
 
 
 @require_POST
