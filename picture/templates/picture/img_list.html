@@ -57,15 +57,16 @@
 <div>
     <form id="publishform" action="{% url 'picture:publish' %}" method="post">
         {% csrf_token %}
-        <p>
+        <div>
             <label for="{{ form.img_url.id_for_label }}">粘贴图片链接</label>
             {{ form.img_url }}
-        </p>
-        <p>
+        </div>
+        <div>
             <label for="{{ form.description.id_for_label }}">添加备注</label>
             {{ form.description }}
-        </p>
-        <input type="button" onclick="submitForm();" value="点击发布">
+        </div>
+        <!--<input type="button" onclick="submitForm();" value="点击发布">-->
+        <input type="submit" value="点击发布">
     </form>
 </div>
 

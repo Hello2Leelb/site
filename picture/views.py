@@ -1,7 +1,7 @@
 from datetime import timedelta
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.http import JsonResponse
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.list import ListView
 from django.views.decorators.http import require_POST
@@ -66,7 +66,8 @@ def get_publication_img(request):
             img_url=new_pub_form.cleaned_data['img_url'],
             description=new_pub_form['description'],
         )
-    return JsonResponse({'status': 'ok'})
+    # return JsonResponse({'status': 'ok'})
+    return redirect(reverse('picture:images'))
 
 
 @require_POST
