@@ -40,8 +40,6 @@ class User(AbstractBaseUser):
     email = models.EmailField(_('email address'), blank=True, null=True)
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
-    last_login = None
-
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'email'
 
