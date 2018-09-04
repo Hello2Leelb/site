@@ -10,7 +10,7 @@ class AuthSiteUserForm(AuthenticationForm):
     """
     登录验证表单，包括 username, password
     """
-    label_suffix = ''
+    pass
 
 
 class SiteUserCreationForm(UserCreationForm):
@@ -18,7 +18,7 @@ class SiteUserCreationForm(UserCreationForm):
     注册账户，基于model User，包括 username, email, password1, password2
     其中，email非必需
     """
-    label_suffix = ''
+    pass
 
     class Meta(UserCreationForm.Meta):
         model = SiteUser
@@ -26,4 +26,6 @@ class SiteUserCreationForm(UserCreationForm):
 
 
 class UserPasswdChangeForm(PasswordChangeForm):
-    label_suffix = ''
+    pass
+    # label_suffix = ''
+

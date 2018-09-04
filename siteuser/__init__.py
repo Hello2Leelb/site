@@ -36,7 +36,7 @@ def login(request, user, backend=None):
     try:
         backend = backend or user.backend
     except AttributeError:
-        backends = get_backends(return_tuples=True)
+        backends = get_backends()
         if len(backends) == 1:
             _, backend = backends[0]
         else:

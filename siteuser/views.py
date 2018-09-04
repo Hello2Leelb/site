@@ -40,19 +40,20 @@ def login_user(request):
         # password = request.POST['password']
         # logining_user = authenticate(request, username=username, password=password)
 
-        auth_form = AuthSiteUserForm(request)
+        auth_form = AuthSiteUserForm(request, data=request.POST)
         if auth_form.is_valid():
             # 验证数据合法时，同时authenticate()验证返回对象实例
             logining_user = auth_form.get_user()
             if logining_user.is_authenticated:
                 login(request, logining_user)
 
-                qs = QueryDict(urlparse(request.url).query, mutable=True)
+                qs = QueryDict(urlparse(request.get_full_path()).query, mutable=True)
                 login_from = qs.get('next')
                 if login_from:
                     return redirect(login_from)
-                else:
-                    return redirect(reverse(_index))
+                return redirect(reverse(_index))
+            else:
+                redirect(reverse('siteuser:register'))
 
     else:
         auth_form = AuthSiteUserForm()
@@ -64,6 +65,7 @@ def login_user(request):
 # 第一次登录，cookie中只有csrf_token，验证系统中间件返回AnonymousUser。后台的login_view中，验证表单通过账号密码获取用户对象。
 
 
+@login_required(login_url=reverse_lazy('siteuser:login'))
 def logout_user(request):
     logout(request)
     return redirect(reverse(_index))

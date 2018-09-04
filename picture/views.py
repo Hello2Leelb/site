@@ -25,7 +25,9 @@ class ImgList(ListView):
 
     paginate_by = 10
     context_object_name = 'entry_list'
-    extra_context = {'form': PublishImgForm()}
+    extra_context = {
+        'form': PublishImgForm(),
+    }
 
     def get_context_data(self, *, object_list=None, **kwargs):
         content = super().get_context_data()
@@ -58,13 +60,13 @@ class ImgList(ListView):
 
 
 @require_POST
-@login_required(login_url=reverse_lazy('siteuser:login'))
+@login_required(redirect_field_name=None, login_url=reverse_lazy('siteuser:login'))
 def get_publication_img(request):
     new_pub_form = PublishImgForm(request.POST)
     if new_pub_form.is_valid():
         request.user.pictureentry_set.create(
             img_url=new_pub_form.cleaned_data['img_url'],
-            description=new_pub_form['description'],
+            description=new_pub_form.cleaned_data['description'],
         )
     # return JsonResponse({'status': 'ok'})
     return redirect(reverse('picture:images'))
@@ -76,20 +78,22 @@ def pic_vote(request):
         pic_id = int(request.POST['pic'])
         pic = PictureEntry.objects.get(id=pic_id)
     except ValueError:
-        return JsonResponse({'result': 'some error'})
-
-    ip = request.META.get('REMOTE_ADDR ')
+        return JsonResponse({'status': 'some error'})
+    if request.user.is_authenticated:
+        voter = str(request.user.pk)
+    else:
+        voter = request.META.get('REMOTE_ADDR ')
     vtype = 0
     if request.POST['type'] == 'pos':
         vtype = 1
 
     obj, created = pic.picvotelog_set.get_or_create(
-        remote_ip=ip,
+        src=voter,
         type=vtype,
     )
     if not created:
-        return JsonResponse({'result': '已投过票'}, json_dumps_params={
+        return JsonResponse({'status': '已投过票'}, json_dumps_params={
             'ensure_ascii': False
         })
     else:
-        return JsonResponse({'result': 'ok'})
+        return JsonResponse({'status': 'ok'})

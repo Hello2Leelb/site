@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>骚图</title>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <!--{% load static %}-->
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 </head>
 <body>
 
@@ -54,6 +55,8 @@
     {% endif %}
 </div>
 
+<div id="message" style=" display: none;"></div>
+
 <div>
     <form id="publishform" action="{% url 'picture:publish' %}" method="post">
         {% csrf_token %}
@@ -70,8 +73,6 @@
     </form>
 </div>
 
-<div id="message" style="margin-left: -56px; margin-top: -10.5px; display: none;"></div>
-
 <script>
     var token = $(" input[name='csrfmiddlewaretoken'] ").val();
 
@@ -86,35 +87,33 @@
             type: "POST",
             headers:{"X-CSRFToken": token},
             data: {
-                "img_url": vurl,
-                "description": vdes,
+                img_url: vurl,
+                description: vdes,
             },
         });
     }
-
 
     $(document).ready(function(){
         $(".vote").click(function (e) {
             var v_id = $(e.target).attr("data-id");
             var type = $(e.target).attr("data-type");
             $.ajax({
-                url: "/pic/vote",
-                type: "POST"
+                url: "vote/",
+                type: "POST",
                 data: {
-                    "pic": v_id,
-                    "type": type,
+                    pic: v_id,
+                    type: type,
                 },
                 headers:{"X-CSRFToken": token},
-                success: function(res){
-                    var data = eval("("+res+")");
-                    msg = data["result"];
+                success: function(data){
+                    var msg = data["status"];
                     if(msg=="ok"){
-                        t = parseInt($(e.target).text());
+                        var t = parseInt($(e.target).text());
                         $(e.target).text(t+1);
                     }
                     else{
                         $(" #message ").text(msg);
-                        $(" #message ").show()show().delay(1000).hide(200);
+                        $(" #message ").show().delay(1000).hide(200);
                     }
                 }
             });
