@@ -6,8 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.list import ListView
 from django.views.decorators.http import require_POST
 from django.utils import timezone
+from django.db.models import F
 from picture.forms import PublishImgForm
-from picture.models import PictureEntry, PicVoteLog
+from picture.models import PictureEntry
 
 
 # Create your views here.
@@ -74,11 +75,6 @@ def get_publication_img(request):
 
 @require_POST
 def pic_vote(request):
-    try:
-        pic_id = int(request.POST['pic'])
-        pic = PictureEntry.objects.get(id=pic_id)
-    except ValueError:
-        return JsonResponse({'status': 'some error'})
     if request.user.is_authenticated:
         voter = str(request.user.pk)
     else:
@@ -87,6 +83,13 @@ def pic_vote(request):
     if request.POST['type'] == 'pos':
         vtype = 1
 
+    try:
+        pic_id = int(request.POST['pic'])
+        pic = PictureEntry.objects.get(id=pic_id)
+    except ValueError:
+        return JsonResponse({'status': 'some error'})
+    except PictureEntry.DoesNotExist:
+        return JsonResponse({'status': 'some error'})
     obj, created = pic.picvotelog_set.get_or_create(
         src=voter,
         type=vtype,
@@ -96,4 +99,8 @@ def pic_vote(request):
             'ensure_ascii': False
         })
     else:
+        if vtype:
+            PictureEntry.objects.filter(id=pic_id).update(positive=F('positive') + 1)
+        else:
+            PictureEntry.objects.filter(id=pic_id).update(positive=F('negative') + 1)
         return JsonResponse({'status': 'ok'})
