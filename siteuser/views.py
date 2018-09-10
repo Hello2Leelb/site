@@ -53,7 +53,7 @@ def login_user(request):
                     return redirect(login_from)
                 return redirect(reverse(_index))
             else:
-                redirect(reverse('siteuser:register'))
+                return redirect(reverse('siteuser:register'))
 
     else:
         auth_form = AuthSiteUserForm()
@@ -74,10 +74,10 @@ def logout_user(request):
 @login_required(login_url=reverse_lazy('siteuser:login'))
 def change_password(request):
     if request.method == 'POST':
-        change_form = UserPasswdChangeForm(request.user)
+        change_form = UserPasswdChangeForm(request.user, data=request.POST)
         if change_form.is_valid():
             change_form.save()
-        return request(reverse('siteuser:login'))
+            return redirect(reverse('siteuser:login'))
 
     else:
         change_form = UserPasswdChangeForm(request.user)

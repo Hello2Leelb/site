@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>骚图</title>
-    <!--{% load static %}-->
-    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    {% load static %}
+    <!--<script src="https://code.jquery.com/jquery-3.3.1.js"></script>-->
+    <script src="{% static 'picture/js/jquery-3.3.1.js' %}"></script>
 </head>
 <body>
 
@@ -94,9 +95,9 @@
     }
 
     $(document).ready(function(){
-        $(".vote").click(function (e) {
-            var v_id = $(e.target).attr("data-id");
-            var type = $(e.target).attr("data-type");
+        $(".vote").click(function () {
+            var v_id = $(this).attr("data-id");
+            var type = $(this).attr("data-type");
             $.ajax({
                 url: "vote/",
                 type: "POST",
@@ -108,11 +109,11 @@
                 success: function(data){
                     var msg = data["status"];
                     if(msg=="ok"){
-                        var t = parseInt($(e.target).text());
-                        $(e.target).text(t+1);
+                        var t = parseInt($(this).next().html());
+                        $(this).next().html(t+1);
                     }
                     else{
-                        $(" #message ").text(msg);
+                        $(" #message ").html(msg);
                         $(" #message ").show().delay(1000).hide(200);
                     }
                 }

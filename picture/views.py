@@ -78,7 +78,8 @@ def pic_vote(request):
     if request.user.is_authenticated:
         voter = str(request.user.pk)
     else:
-        voter = request.META.get('REMOTE_ADDR ')
+        voter = request.META.get('REMOTE_ADDR')
+        # ip = request.META.get('HTTP_X_FORWARDED_FOR')
     vtype = 0
     if request.POST['type'] == 'pos':
         vtype = 1
@@ -90,15 +91,13 @@ def pic_vote(request):
         return JsonResponse({'status': 'some error'})
     except PictureEntry.DoesNotExist:
         return JsonResponse({'status': 'some error'})
-    obj, created = pic.picvotelog_set.get_or_create(
-        src=voter,
-        type=vtype,
-    )
-    if not created:
+
+    if pic.picvotelog_set.filter(src=voter).exists():
         return JsonResponse({'status': '已投过票'}, json_dumps_params={
             'ensure_ascii': False
         })
     else:
+        pic.picvotelog_set.create(src=voter, type=vtype)
         if vtype:
             PictureEntry.objects.filter(id=pic_id).update(positive=F('positive') + 1)
         else:
