@@ -8,28 +8,35 @@
     <script src="{% static 'picture/js/jquery-3.3.1.js' %}"></script>
 </head>
 <body>
+    <div>
+        <a href="{% url 'siteuser:logout' %}">注销登陆</a>
+    </div>
 
 <div>
+    <ul style="list-style-type: none;">
     {% for entry in entry_list %}
-    <div>
-        <span>{{ entry.uploader.username }}</span>
-        <span>{{ entry.id }}</span>
+    <li>
         <div>
-            <img src="{{ entry.img_url}}">
+            <span>{{ entry.uploader.username }}</span>
+            <span>{{ entry.id }}</span>
+            <div>
+                <img src="{{ entry.img_url}}">
+            </div>
+            <p>
+                {{ entry.description }}
+            </p>
+            <div>
+                <a class="vote" href="javascript:;" data-id="{{ entry.id }}" data-type="pos">↑</a>
+                <span> {{ entry.positive }} </span>
+                <a class="vote" href="javascript:;" data-id="{{ entry.id }}" data-type="neg">↓</a>
+                <span> {{ entry.negative }} </span>
+            </div>
         </div>
-        <p>
-            {{ entry.description }}
-        </p>
-        <div>
-            <a class="vote" href="javascript:;" data-id="{{ entry.id }}" data-type="pos">↑</a>
-            <span> {{ entry.positive }} </span>
-            <a class="vote" href="javascript:;" data-id="{{ entry.id }}" data-type="neg">↓</a>
-            <span> {{ entry.negative }} </span>
-        </div>
-    </div>
+    </li>
     {% empty %}
         <span> no content </span>
     {% endfor %}
+    </ul>
 </div>
 
 <div>

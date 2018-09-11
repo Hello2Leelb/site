@@ -65,7 +65,7 @@ def login_user(request):
 # 第一次登录，cookie中只有csrf_token，验证系统中间件返回AnonymousUser。后台的login_view中，验证表单通过账号密码获取用户对象。
 
 
-@login_required(login_url=reverse_lazy('siteuser:login'))
+# @login_required(login_url=reverse_lazy('siteuser:login'))
 def logout_user(request):
     logout(request)
     return redirect(reverse(_index))
