@@ -14,7 +14,7 @@ _index = 'picture:images'
 
 def register(request):
     if request.method == 'POST':
-        new_user_form = SiteUserCreationForm(request.POST)
+        new_user_form = SiteUserCreationForm(request.POST, label_suffix='')
         if new_user_form.is_valid():
             new_user_form.save()
 
@@ -27,7 +27,7 @@ def register(request):
             return redirect(reverse(_index))
 
     else:
-        new_user_form = SiteUserCreationForm()
+        new_user_form = SiteUserCreationForm(label_suffix='')
 
     return render(request, template_name='siteuser/register.html', context={
         'form': new_user_form
@@ -40,7 +40,7 @@ def login_user(request):
         # password = request.POST['password']
         # logining_user = authenticate(request, username=username, password=password)
 
-        auth_form = AuthSiteUserForm(request, data=request.POST)
+        auth_form = AuthSiteUserForm(request, data=request.POST, label_suffix='')
         if auth_form.is_valid():
             # 验证数据合法时，同时authenticate()验证返回对象实例
             logining_user = auth_form.get_user()
@@ -56,13 +56,15 @@ def login_user(request):
                 return redirect(reverse('siteuser:register'))
 
     else:
-        auth_form = AuthSiteUserForm()
+        auth_form = AuthSiteUserForm(label_suffix='')
 
     return render(request, 'siteuser/login_page.html', context={
          'form': auth_form,
     },)
 
-# 第一次登录，cookie中只有csrf_token，验证系统中间件返回AnonymousUser。后台的login_view中，验证表单通过账号密码获取用户对象。
+# 第一次登录，cookie中只有csrf_token，验证系统中间件返回AnonymousUser。
+# 后台登录动作login_view中，表单验证时验证后端通过账号密码获取用户对象。
+# 之后，cookie中有sessionid，其实为用户主键。验证中间件循环所有验证后端，查询主键获取对象。
 
 
 # @login_required(login_url=reverse_lazy('siteuser:login'))
@@ -74,13 +76,13 @@ def logout_user(request):
 @login_required(login_url=reverse_lazy('siteuser:login'))
 def change_password(request):
     if request.method == 'POST':
-        change_form = UserPasswdChangeForm(request.user, data=request.POST)
+        change_form = UserPasswdChangeForm(request.user, data=request.POST, label_suffix='')
         if change_form.is_valid():
             change_form.save()
             return redirect(reverse('siteuser:login'))
 
     else:
-        change_form = UserPasswdChangeForm(request.user)
+        change_form = UserPasswdChangeForm(request.user, label_suffix='')
 
     return render(request, template_name='siteuser/change_pwd.html', context={
         'form': change_form

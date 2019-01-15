@@ -18,7 +18,6 @@ class SiteUserCreationForm(UserCreationForm):
     注册账户，基于model User，包括 username, email, password1, password2
     其中，email非必需
     """
-    pass
 
     class Meta(UserCreationForm.Meta):
         model = SiteUser

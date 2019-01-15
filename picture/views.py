@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.list import ListView
 from django.views.decorators.http import require_POST
 from django.utils import timezone
-from django.db.models import F
+# from django.db.models import F
 from picture.forms import PublishImgForm
 from picture.models import PictureEntry
 
@@ -31,7 +31,7 @@ class ImgList(ListView):
     }
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        content = super().get_context_data()
+        content = super().get_context_data(**kwargs)
         if not content['is_paginated']:
             content['front'] = []
             content['back'] = []
@@ -85,21 +85,25 @@ def pic_vote(request):
         vtype = 1
 
     try:
-        pic_id = int(request.POST['pic'])
-        pic = PictureEntry.objects.get(id=pic_id)
+        # pic_id = int(request.POST['pic'])
+        pic_obj = PictureEntry.objects.get(id=int(request.POST['pic']))
     except ValueError:
         return JsonResponse({'status': 'some error'})
     except PictureEntry.DoesNotExist:
         return JsonResponse({'status': 'some error'})
 
-    if pic.picvotelog_set.filter(src=voter).exists():
+    if pic_obj.picvotelog_set.filter(src=voter).exists():
         return JsonResponse({'status': '已投过票'}, json_dumps_params={
             'ensure_ascii': False
         })
     else:
-        pic.picvotelog_set.create(src=voter, type=vtype)
+        pic_obj.picvotelog_set.create(src=voter, type=vtype)
         if vtype:
-            PictureEntry.objects.filter(id=pic_id).update(positive=F('positive') + 1)
+            # PictureEntry.objects.filter(id=pic_id).update(positive=F('positive') + 1)
+            pic_obj.positive += 1
         else:
-            PictureEntry.objects.filter(id=pic_id).update(positive=F('negative') + 1)
+            # PictureEntry.objects.filter(id=pic_id).update(negative=F('negative') + 1)
+            pic_obj.negative += 1
+        pic_obj.save()
+
         return JsonResponse({'status': 'ok'})
